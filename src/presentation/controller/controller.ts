@@ -5,15 +5,13 @@ import { fromZodError } from 'zod-validation-error';
 import schemaTypes from '../../types/schemaTypes';
 
 export const logInController = async (req: Request, res: Response) => {
-  res.status(200).json({
-    message: 'You are logged in',
-  });
+  res.status(200).json(req.user);
 };
 
 export const logOutController = async (req: Request, res: Response) => {
   if (!req.user)
     return res.status(401).json({
-      error: 'unauthorized user!',
+      message: 'unauthorized user!',
     });
 
   req.logout((err) => {
@@ -59,6 +57,9 @@ export const registerController = async (req: Request, res: Response) => {
 };
 
 export const loginStatusController = async (req: Request, res: Response) => {
+  if(!req?.user) return res.status(400).json({
+    message: 'You must log in first!'
+  })
   res.status(200).json({
     message: req.user,
   });
