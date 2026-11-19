@@ -19,9 +19,15 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: originUrl,
+    origin: (origin, callback) => {
+      if (!origin || originUrl.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-  }),
+  })
 );
 
 app.use(session({
